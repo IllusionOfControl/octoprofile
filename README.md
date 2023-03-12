@@ -24,14 +24,14 @@ npm install
 To build the static site, run the following command:
 
 ```shell 
-GITHUB_TOKEN=<your-token-here> npm run build
+GITHUB_PERSONAL_TOKEN=<your-token-here> npm run build
 ```
 This will generate a static version of the site in the out directory.
 
 To export the site, run the following command:
 
 ```shell
-GITHUB_TOKEN=<your-token-here> npm run export
+GITHUB_PERSONAL_TOKEN=<your-token-here> npm run export
 ```
 
 This will generate a static version of the site in the out directory 
