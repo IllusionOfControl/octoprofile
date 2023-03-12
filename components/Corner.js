@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { theme } from '../style';
+import {GITHUB_LINK} from "../constants";
 const { colors } = theme;
 
 const CornerStyles = styled.div`
@@ -48,7 +49,7 @@ const CornerStyles = styled.div`
 const Corner = () => (
   <CornerStyles>
     <a
-      href="https://github.com/bchiang7/octoprofile"
+      href={GITHUB_LINK}
       target="_blank"
       rel="noopener noreferrer"
       className="github-corner"
