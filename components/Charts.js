@@ -12,20 +12,38 @@ const Charts = ({ langData, repoData }) => {
     const labels = langData.map(lang => lang.label);
     const data = langData.map(lang => lang.value);
 
-    setLangChartData(data);
+  const prepareMainLangsData = () => {
+    const LIMIT = 8;
+    const mainLangsCount = repoData
+      .map(repo => repo.language)
+      .reduce((acc, el) => {
+        acc[el] = (acc[el] || 0) + 1;
+        return acc;
+      }, {})
+    const sortedLangs = dictToArray(mainLangsCount, (key, value) => ({label: key, value: value}))
+      .filter(lang => lang.label != 'null')
+      .sort((itemA, itemB) => itemA.value - itemB.value)
+      .reverse();
+    const otherLanguagesValue = sortedLangs
+      .slice(LIMIT)
+      .reduce((accum, {value}) => accum + 1, 0);
+    const selectedLanguages = [...sortedLangs.slice(0, LIMIT), {label: 'Other', value: otherLanguagesValue}];
 
-    if (data.length > 0) {
-      const backgroundColor = langData.map(
-        ({ color }) => `#${color.length > 4 ? color.slice(1) : color.slice(1).repeat(2)}B3`,
-      );
-      const borderColor = langData.map(lang => `${lang.color}`);
-      const chartType = 'pie';
-      const axes = false;
-      const legend = true;
-      const config = { ctx, chartType, labels, data, backgroundColor, borderColor, axes, legend };
-      buildChart(config);
+    const preparedData = {
+      labels: selectedLanguages.map(({label}) => label),
+      datasets: [
+        {
+          data: selectedLanguages.map(item => item.value),
+          backgroundColor: selectedLanguages.map(({label}) => `${LANG_COLORS[label]}B3`),
+          borderColor: selectedLanguages.map(({label}) => LANG_COLORS[label]),
+          borderWidth: 1,
+        }
+      ],
     }
-  };
+
+    setMainLangsData(preparedData);
+  }
+
 
   // Create Most Starred chart
   const [starChartData, setStarChartData] = useState(null);
@@ -100,8 +118,9 @@ const Charts = ({ langData, repoData }) => {
           </header>
 
           <div className="chart-container">
-            {langChartError && <p>Nothing to see here!</p>}
-            <canvas id="langChart" width={chartSize} height={chartSize} />
+            {mainLangsData
+              ? <Pie data={mainLangsData}/>
+              : <p>Nothing to see here!</p>}
           </div>
         </div>
 
