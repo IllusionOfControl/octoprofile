@@ -1,48 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Head, UserInfo, Charts, Repos, Footer, Corner, Error, RateLimit } from '../components';
-import GhPolyglot from 'gh-polyglot';
-
-const GITHUB_TOKEN = process.env.GITHUB_PERSONAL_TOKEN;
-
-const FETCH_HEADERS = {
-  Authorization: `Token ${GITHUB_TOKEN}`,
-}
-
-const fetchUserProfileData = async () => {
-  const response = await fetch(
-    `https://api.github.com/user`,
-    {headers: FETCH_HEADER}
-  )
-  return await response.json();
-}
-
-const fetchUserReposData = async (repos_count) => {
-  const REPOS_PER_PAGE = 30;
-  const numbersOfPages = Math.ceil(repos_count / REPOS_PER_PAGE);
-  let totalRepositories = []
-
-  for (let pageNumber = 1; pageNumber <= numbersOfPages; pageNumber++) {
-    const response = await fetch(
-      `https://api.github.com/user/repos?page=${pageNumber}&per_page=${REPOS_PER_PAGE}`,
-      {headers: FETCH_HEADER}
-    );
-    const fetched_repos = await response.json();
-    totalRepositories = totalRepositories.concat(fetched_repos);
-  }
-
-  return totalRepositories;
-}
+import { Head, UserInfo, Charts, Repos, Footer, Corner} from '../components';
+import {
+  fetchUserProfileData,
+  fetchUserReposData,
+  fetchReposLangsData,
+} from "../api";
 
 export const getStaticProps = async () => {
   const userData = await fetchUserProfileData();
   const reposData = await fetchUserReposData(userData.public_repos);
+  const langData = await fetchReposLangsData(reposData);
 
   return {
     props: {
       userData: userData,
       repoData: reposData,
-      langData: [],
+      langData: langData,
     }
   }
 }
@@ -63,16 +37,12 @@ const Home = props => {
 
   return (
     <main>
-      <Head title={`OctoProfile | ${userData.login}`} />
+      <Head title={`OctoProfile | ${userData.login}`}/>
 
       <Corner />
-
-      {userData && <UserInfo userData={userData} />}
-
-      {langData && repoData && <Charts langData={langData} repoData={repoData} />}
-
-      {repoData && <Repos repoData={repoData} />}
-
+      <UserInfo userData={userData} />
+      <Charts langData={langData} repoData={repoData} />
+      <Repos repoData={repoData} />
       <Footer />
     </main>
   );
