@@ -4,13 +4,10 @@ import { buildChart, langColors, backgroundColor, borderColor } from '../utils';
 import ChartsStyles from './styles/ChartsStyles';
 import { Section } from '../style';
 
-const Charts = ({ langData, repoData }) => {
-  // Create chart with langData
-  const [langChartData, setLangChartData] = useState(null);
-  const initLangChart = () => {
-    const ctx = document.getElementById('langChart');
-    const labels = langData.map(lang => lang.label);
-    const data = langData.map(lang => lang.value);
+const Charts = ({langData, repoData}) => {
+  const [mainLangsData, setMainLangsData] = useState(null);
+  const [starsByReposData, setStarsByReposData] = useState(null);
+  const [topLangBySizeData, setTopLangBySizeData] = useState(null);
 
   const prepareMainLangsData = () => {
     const LIMIT = 8;
