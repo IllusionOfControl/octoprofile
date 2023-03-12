@@ -100,7 +100,7 @@ const Charts = ({langData, repoData}) => {
       <ChartsStyles>
         <div className="chart">
           <header>
-            <h2>Top Languages</h2>
+            <h2>Top Main Languages</h2>
           </header>
 
           <div className="chart-container">
@@ -123,7 +123,7 @@ const Charts = ({langData, repoData}) => {
 
         <div className="chart">
           <header>
-            <h2>Stars per Language</h2>
+            <h2>Most Used Language</h2>
           </header>
           <div className="chart-container">
             {topLangBySizeData
