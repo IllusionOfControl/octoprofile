@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Head, UserInfo, Charts, Repos, Footer, Corner} from '../components';
 import {
@@ -23,17 +22,6 @@ export const getStaticProps = async () => {
 
 const Home = props => {
   const {userData, repoData, langData} = props;
-
-  const getLangData = () => {
-    const me = new GhPolyglot(`${username}`);
-    me.userStats((err, stats) => {
-      if (err) {
-        console.error('Error:', err);
-        setError({ active: true, type: 400 });
-      }
-      setLangData(stats);
-    });
-  };
 
   return (
     <main>

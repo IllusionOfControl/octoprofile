@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Octicon, { Repo, Star, RepoForked, TriangleDown } from '@primer/octicons-react';
 import FlipMove from 'react-flip-move';
-import { langColors } from '../utils';
+import { langColors } from '../constants';
 import ReposStyles from './styles/ReposStyles';
 import DropdownStyles from './styles/DropdownStyles';
 import { Section } from '../style';
