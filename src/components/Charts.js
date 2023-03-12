@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ChartsStyles from './styles/ChartsStyles';
 import {Section} from '../style';
 import {langColors} from "../constants";
-import {prepareMainLangsData, prepareStarsByReposData, prepareTopLangsBySizeChartData} from "../helpers";
+import {prepareMainLangsData, prepareStarsByReposData, prepareTopLangsBySizeChartData} from "@/helpers";
 import {Chart as ChartJS, BarElement, ArcElement, Tooltip, Legend, CategoryScale, LinearScale} from "chart.js";
 import {Pie, Bar} from "react-chartjs-2";
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { theme } from '../style';
-import {GITHUB_LINK} from "../constants";
+import {GITHUB_LINK} from "@/constants";
 const { colors } = theme;
 
 const CornerStyles = styled.div`

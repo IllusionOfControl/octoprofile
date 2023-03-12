@@ -4,7 +4,7 @@ import {
   fetchUserProfileData,
   fetchUserReposData,
   fetchReposLangsData,
-} from "../api";
+} from "@/api";
 
 export const getStaticProps = async () => {
   const userData = await fetchUserProfileData();

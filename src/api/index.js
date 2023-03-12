@@ -1,4 +1,4 @@
-import {FETCH_HEADER} from "../constants";
+import {FETCH_HEADER} from "@/constants";
 
 const fetchUserProfileData = async () => {
   const response = await fetch(

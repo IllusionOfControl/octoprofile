@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { theme } from '../style';
+import { theme } from './index';
 const { colors } = theme;
 
 const mixins = {
