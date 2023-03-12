@@ -8,21 +8,23 @@ const UserInfo = ({ userData }) => (
   <Section dark>
     {userData && (
       <UserInfoStyles>
-        {userData.avatar_url && (
-          <div className="avatar">
-            <img src={userData.avatar_url} alt="avatar" />
-          </div>
+        <div className="avatar">
+          <img src={userData.avatar_url} alt="avatar" />
+        </div>
+
+        <h1>{userData.name}</h1>
+
+        {userData.bio && (
+        <h3>
+          {userData.bio}
+        </h3>
         )}
 
-        {userData.name && <h1>{userData.name}</h1>}
-
-        {userData.login && (
-          <h2>
-            <a href={userData.html_url} target="_blank" rel="noopener noreferrer">
-              @{userData.login}
-            </a>
-          </h2>
-        )}
+        <h2>
+          <a href={userData.html_url} target="_blank" rel="noopener noreferrer">
+            @{userData.login}
+          </a>
+        </h2>
 
         <div className="info">
           {userData.company && (

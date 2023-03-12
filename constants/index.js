@@ -6,7 +6,7 @@ const FETCH_HEADER = {
   Authorization: `Token ${GITHUB_TOKEN}`,
 }
 
-const GITHUB_LINK = "https://github.com/bchiang7/octoprofile";
+const GITHUB_LINK = "https://github.com/IllusionOfControl/octoprofile";
 
 export {
   GITHUB_TOKEN,

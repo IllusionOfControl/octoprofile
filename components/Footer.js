@@ -34,15 +34,8 @@ const Footer = () => (
         Next.js
       </a>
       &middot;
-      <a href="https://www.chartjs.org/" target="_blank" rel="noopener noreferrer">
-        Chart.js
-      </a>
-      &middot;
-      <a
-        href="https://github.com/IonicaBizau/node-gh-polyglot"
-        target="_blank"
-        rel="noopener noreferrer">
-        GitHub Polyglot
+      <a href="https://react-chartjs-2.js.org/" target="_blank" rel="noopener noreferrer">
+        react-chartjs-2
       </a>
       &middot;
       <a href="https://www.styled-components.com/" target="_blank" rel="noopener noreferrer">

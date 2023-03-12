@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 const defaultTitle = 'OctoProfile';
 const defaultDescription = 'A nicer look at your GitHub profile. With charts!';
-const defaultOGURL = 'https://octoprofile.bchiang7.now.sh';
-const defaultOGImage = 'https://octoprofile.bchiang7.now.sh/static/og.png';
+const defaultOGURL = '';
+const defaultOGImage = '';
 
 const Head = props => (
   <NextHead>
@@ -28,7 +28,7 @@ const Head = props => (
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={props.ogImage || defaultOGImage} />
     <meta name="twitter:description" content={props.description || defaultDescription} />
-    <meta name="twitter:creator" content={'@bchiang7'} />
+    <meta name="twitter:creator" content={'@IllusionOfControl'} />
     <meta name="twitter:title" content={props.title || defaultTitle} />
     <meta property="og:image" content={props.ogImage || defaultOGImage} />
     <meta property="og:image:width" content="1200" />
