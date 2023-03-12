@@ -2,7 +2,7 @@
 
 A nicer look at your personal GitHub Profile! With charts!
 
-![demo](https://raw.githubusercontent.com/IllusionOfControl/octoprofile/master/static/og.png)
+![demo](https://raw.githubusercontent.com/IllusionOfControl/octoprofile/master/public/og.png)
 
 Built with:
 
