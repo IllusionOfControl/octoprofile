@@ -8,6 +8,25 @@ const Charts = ({langData, repoData}) => {
   const [mainLangsData, setMainLangsData] = useState(null);
   const [starsByReposData, setStarsByReposData] = useState(null);
   const [topLangBySizeData, setTopLangBySizeData] = useState(null);
+  const chartSize = 300;
+
+  const barOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
+
+  const pieOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+    },
+  }
 
   const prepareMainLangsData = () => {
     const LIMIT = 8;
@@ -30,6 +49,7 @@ const Charts = ({langData, repoData}) => {
       labels: selectedLanguages.map(({label}) => label),
       datasets: [
         {
+          label: 'Number of repos',
           data: selectedLanguages.map(item => item.value),
           backgroundColor: selectedLanguages.map(({label}) => `${LANG_COLORS[label]}B3`),
           borderColor: selectedLanguages.map(({label}) => LANG_COLORS[label]),
@@ -41,70 +61,64 @@ const Charts = ({langData, repoData}) => {
     setMainLangsData(preparedData);
   }
 
+  const prepareTopLangsBySizeChartData = () => {
+    const LIMIT = 8;
+    const sorted = langData
+      .sort((itemA, itemB) => itemA.value - itemB.value)
+      .reverse();
+    const otherLanguagesValue = sorted
+      .slice(LIMIT)
+      .reduce((accum, {value}) => accum + value, 0)
+    const selectedLanguages = [...sorted.slice(0, LIMIT), {label: 'Other', value: otherLanguagesValue}];
 
-  // Create Most Starred chart
-  const [starChartData, setStarChartData] = useState(null);
-  const initStarChart = () => {
-    const ctx = document.getElementById('starChart');
+    const preparedData = {
+      labels: selectedLanguages.map(({label}) => label),
+      datasets: [
+        {
+          label: 'Size in bytes',
+          data: selectedLanguages.map(item => item.value),
+          backgroundColor: selectedLanguages.map(({label}) => `${LANG_COLORS[label]}B3`),
+          borderColor: selectedLanguages.map(({label}) => LANG_COLORS[label]),
+          borderWidth: 1,
+        }
+      ],
+    }
+
+    setTopLangBySizeData(preparedData);
+  }
+
+  const prepareStarsByReposData = () => {
     const LIMIT = 5;
-    const sortProperty = 'stargazers_count';
-    const mostStarredRepos = repoData
-      .filter(repo => !repo.fork)
-      .sort((a, b) => b[sortProperty] - a[sortProperty])
-      .slice(0, LIMIT);
-    const labels = mostStarredRepos.map(repo => repo.name);
-    const data = mostStarredRepos.map(repo => repo[sortProperty]);
+    const mainLangsCount = repoData
+      .reduce((acc, {name, stargazers_count}) => {
+        acc[name] = (acc[name] || 0) + stargazers_count;
+        return acc;
+      }, {});
+    const sortedRepos = dictToArray(mainLangsCount, (key, value) => ({label: key, value: value}))
+      .sort((itemA, itemB) => itemA.value - itemB.value)
+      .reverse();
+    const selectedRepos = sortedRepos.slice(0, LIMIT);
 
-    setStarChartData(data);
-
-    if (data.length > 0) {
-      const chartType = 'bar';
-      const axes = true;
-      const legend = false;
-      const config = { ctx, chartType, labels, data, backgroundColor, borderColor, axes, legend };
-      buildChart(config);
+    const preparedData = {
+      labels: selectedRepos.map(({label}) => label),
+      datasets: [
+        {
+          label: 'Stars',
+          data: selectedRepos.map(item => item.value),
+          backgroundColor: '#FF5984',
+          borderWidth: 1,
+        }
+      ],
     }
-  };
 
-  // Create Stars per language chart
-  const [thirdChartData, setThirdChartData] = useState(null);
-  const initThirdChart = () => {
-    const ctx = document.getElementById('thirdChart');
-    const filteredRepos = repoData.filter(repo => !repo.fork && repo.stargazers_count > 0);
-    const uniqueLangs = new Set(filteredRepos.map(repo => repo.language));
-    const labels = Array.from(uniqueLangs.values()).filter(l => l);
-    const data = labels.map(lang => {
-      const repos = filteredRepos.filter(repo => repo.language === lang);
-      const starsArr = repos.map(r => r.stargazers_count);
-      const starSum = starsArr.reduce((a, b) => a + b, 0);
-      return starSum;
-    });
-
-    setThirdChartData(data);
-
-    if (data.length > 0) {
-      const chartType = 'doughnut';
-      const axes = false;
-      const legend = true;
-      const borderColor = labels.map(label => langColors[label]);
-      const backgroundColor = borderColor.map(color => `${color}B3`);
-      const config = { ctx, chartType, labels, data, backgroundColor, borderColor, axes, legend };
-      buildChart(config);
-    }
-  };
+    setStarsByReposData(preparedData);
+  }
 
   useEffect(() => {
-    if (langData.length && repoData.length) {
-      initLangChart();
-      initStarChart();
-      initThirdChart();
-    }
+    prepareMainLangsData();
+    prepareStarsByReposData();
+    prepareTopLangsBySizeChartData();
   }, []);
-
-  const chartSize = 300;
-  const langChartError = !(langChartData && langChartData.length > 0);
-  const starChartError = !(starChartData && starChartData.length > 0);
-  const thirdChartError = !(thirdChartData && thirdChartData.length > 0);
 
   return (
     <Section>
@@ -116,7 +130,7 @@ const Charts = ({langData, repoData}) => {
 
           <div className="chart-container">
             {mainLangsData
-              ? <Pie data={mainLangsData}/>
+              ? <Pie data={mainLangsData}  options={pieOptions}/>
               : <p>Nothing to see here!</p>}
           </div>
         </div>
@@ -126,8 +140,9 @@ const Charts = ({langData, repoData}) => {
             <h2>Most Starred</h2>
           </header>
           <div className="chart-container">
-            {starChartError && <p>Nothing to see here!</p>}
-            <canvas id="starChart" width={chartSize} height={chartSize} />
+            {starsByReposData
+              ? <Bar data={starsByReposData} options={barOptions} height={chartSize}/>
+              : <p>Nothing to see here!</p>}
           </div>
         </div>
 
@@ -136,8 +151,9 @@ const Charts = ({langData, repoData}) => {
             <h2>Stars per Language</h2>
           </header>
           <div className="chart-container">
-            {thirdChartError && <p>Nothing to see here!</p>}
-            <canvas id="thirdChart" width={chartSize} height={chartSize} />
+            {topLangBySizeData
+              ? <Pie data={topLangBySizeData} options={pieOptions}/>
+              : <p>Nothing to see here!</p>}
           </div>
         </div>
       </ChartsStyles>
