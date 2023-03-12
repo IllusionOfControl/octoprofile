@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { buildChart, langColors, backgroundColor, borderColor } from '../utils';
 import ChartsStyles from './styles/ChartsStyles';
-import { Section } from '../style';
+import {Section} from '../style';
+import {langColors} from "../constants";
+import {dictToArray} from "../helpers";
+import {Chart as ChartJS, BarElement, ArcElement, Tooltip, Legend, CategoryScale, LinearScale} from "chart.js";
+import {Pie, Bar} from "react-chartjs-2";
+
+ChartJS.register(BarElement, ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
 
 const Charts = ({langData, repoData}) => {
   const [mainLangsData, setMainLangsData] = useState(null);
@@ -51,8 +56,8 @@ const Charts = ({langData, repoData}) => {
         {
           label: 'Number of repos',
           data: selectedLanguages.map(item => item.value),
-          backgroundColor: selectedLanguages.map(({label}) => `${LANG_COLORS[label]}B3`),
-          borderColor: selectedLanguages.map(({label}) => LANG_COLORS[label]),
+          backgroundColor: selectedLanguages.map(({label}) => `${langColors[label]}B3`),
+          borderColor: selectedLanguages.map(({label}) => langColors[label]),
           borderWidth: 1,
         }
       ],
@@ -77,8 +82,8 @@ const Charts = ({langData, repoData}) => {
         {
           label: 'Size in bytes',
           data: selectedLanguages.map(item => item.value),
-          backgroundColor: selectedLanguages.map(({label}) => `${LANG_COLORS[label]}B3`),
-          borderColor: selectedLanguages.map(({label}) => LANG_COLORS[label]),
+          backgroundColor: selectedLanguages.map(({label}) => `${langColors[label]}B3`),
+          borderColor: selectedLanguages.map(({label}) => langColors[label]),
           borderWidth: 1,
         }
       ],
