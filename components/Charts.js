@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ChartsStyles from './styles/ChartsStyles';
 import {Section} from '../style';
 import {langColors} from "../constants";
-import {dictToArray} from "../helpers";
+import {prepareMainLangsData, prepareStarsByReposData, prepareTopLangsBySizeChartData} from "../helpers";
 import {Chart as ChartJS, BarElement, ArcElement, Tooltip, Legend, CategoryScale, LinearScale} from "chart.js";
 import {Pie, Bar} from "react-chartjs-2";
 
@@ -33,31 +33,17 @@ const Charts = ({langData, repoData}) => {
     },
   }
 
-  const prepareMainLangsData = () => {
-    const LIMIT = 8;
-    const mainLangsCount = repoData
-      .map(repo => repo.language)
-      .reduce((acc, el) => {
-        acc[el] = (acc[el] || 0) + 1;
-        return acc;
-      }, {})
-    const sortedLangs = dictToArray(mainLangsCount, (key, value) => ({label: key, value: value}))
-      .filter(lang => lang.label != 'null')
-      .sort((itemA, itemB) => itemA.value - itemB.value)
-      .reverse();
-    const otherLanguagesValue = sortedLangs
-      .slice(LIMIT)
-      .reduce((accum, {value}) => accum + 1, 0);
-    const selectedLanguages = [...sortedLangs.slice(0, LIMIT), {label: 'Other', value: otherLanguagesValue}];
+  const initMainLangsData = () => {
+    const data = prepareMainLangsData(repoData);
 
     const preparedData = {
-      labels: selectedLanguages.map(({label}) => label),
+      labels: data.map(({label}) => label),
       datasets: [
         {
           label: 'Number of repos',
-          data: selectedLanguages.map(item => item.value),
-          backgroundColor: selectedLanguages.map(({label}) => `${langColors[label]}B3`),
-          borderColor: selectedLanguages.map(({label}) => langColors[label]),
+          data: data.map(item => item.value),
+          backgroundColor: data.map(({label}) => `${langColors[label]}B3`),
+          borderColor: data.map(({label}) => langColors[label]),
           borderWidth: 1,
         }
       ],
@@ -66,24 +52,17 @@ const Charts = ({langData, repoData}) => {
     setMainLangsData(preparedData);
   }
 
-  const prepareTopLangsBySizeChartData = () => {
-    const LIMIT = 8;
-    const sorted = langData
-      .sort((itemA, itemB) => itemA.value - itemB.value)
-      .reverse();
-    const otherLanguagesValue = sorted
-      .slice(LIMIT)
-      .reduce((accum, {value}) => accum + value, 0)
-    const selectedLanguages = [...sorted.slice(0, LIMIT), {label: 'Other', value: otherLanguagesValue}];
+  const initTopLangsBySizeChart = () => {
+    const data = prepareTopLangsBySizeChartData(langData);
 
     const preparedData = {
-      labels: selectedLanguages.map(({label}) => label),
+      labels: data.map(({label}) => label),
       datasets: [
         {
           label: 'Size in bytes',
-          data: selectedLanguages.map(item => item.value),
-          backgroundColor: selectedLanguages.map(({label}) => `${langColors[label]}B3`),
-          borderColor: selectedLanguages.map(({label}) => langColors[label]),
+          data: data.map(item => item.value),
+          backgroundColor: data.map(({label}) => `${langColors[label]}B3`),
+          borderColor: data.map(({label}) => langColors[label]),
           borderWidth: 1,
         }
       ],
@@ -92,24 +71,15 @@ const Charts = ({langData, repoData}) => {
     setTopLangBySizeData(preparedData);
   }
 
-  const prepareStarsByReposData = () => {
-    const LIMIT = 5;
-    const mainLangsCount = repoData
-      .reduce((acc, {name, stargazers_count}) => {
-        acc[name] = (acc[name] || 0) + stargazers_count;
-        return acc;
-      }, {});
-    const sortedRepos = dictToArray(mainLangsCount, (key, value) => ({label: key, value: value}))
-      .sort((itemA, itemB) => itemA.value - itemB.value)
-      .reverse();
-    const selectedRepos = sortedRepos.slice(0, LIMIT);
+  const initStarsByReposData = () => {
+    const data = prepareStarsByReposData(repoData);
 
     const preparedData = {
-      labels: selectedRepos.map(({label}) => label),
+      labels: data.map(({label}) => label),
       datasets: [
         {
           label: 'Stars',
-          data: selectedRepos.map(item => item.value),
+          data: data.map(item => item.value),
           backgroundColor: '#FF5984',
           borderWidth: 1,
         }
@@ -120,9 +90,9 @@ const Charts = ({langData, repoData}) => {
   }
 
   useEffect(() => {
-    prepareMainLangsData();
-    prepareStarsByReposData();
-    prepareTopLangsBySizeChartData();
+    initMainLangsData();
+    initStarsByReposData();
+    initTopLangsBySizeChart();
   }, []);
 
   return (
