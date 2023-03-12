@@ -10,25 +10,28 @@ const FETCH_HEADERS = {
 }
 
 const fetchUserProfileData = async () => {
-  const response = await fetch(`https://api.github.com/user`, {headers: FETCH_HEADERS})
+  const response = await fetch(
+    `https://api.github.com/user`,
+    {headers: FETCH_HEADER}
+  )
   return await response.json();
 }
 
 const fetchUserReposData = async (repos_count) => {
   const REPOS_PER_PAGE = 30;
   const numbersOfPages = Math.ceil(repos_count / REPOS_PER_PAGE);
-  let repos = []
+  let totalRepositories = []
 
   for (let pageNumber = 1; pageNumber <= numbersOfPages; pageNumber++) {
     const response = await fetch(
       `https://api.github.com/user/repos?page=${pageNumber}&per_page=${REPOS_PER_PAGE}`,
-      {headers: FETCH_HEADERS}
+      {headers: FETCH_HEADER}
     );
     const fetched_repos = await response.json();
-    repos = repos.concat(fetched_repos);
+    totalRepositories = totalRepositories.concat(fetched_repos);
   }
 
-  return repos;
+  return totalRepositories;
 }
 
 export const getStaticProps = async () => {
