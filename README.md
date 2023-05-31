@@ -15,7 +15,7 @@ Built with:
 To get started, clone the repository and install the dependencies:
 
 ```shell
-git clone https://github.com/username/project.git
+git clone https://github.com/IllusionOfControl/octoprofile.git
 cd project
 npm install
 ```
